@@ -1,18 +1,26 @@
 <!-- Plugin Configuration File. Read more: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
 <idea-plugin>
     <id>com.github.thermoweb.encryptstringplugin</id>
-    <name>encrypt-string-plugin</name>
+    <name>Encrypt Text</name>
+    <description>Adds an editor popup menu to cipher selected string in editor.</description>
     <vendor>thermoweb</vendor>
 
     <depends>com.intellij.modules.platform</depends>
 
-    <extensions defaultExtensionNs="com.intellij">
-        <applicationService serviceImplementation="com.github.thermoweb.encryptstringplugin.services.MyApplicationService"/>
-        <projectService serviceImplementation="com.github.thermoweb.encryptstringplugin.services.MyProjectService"/>
-    </extensions>
-
-    <applicationListeners>
-        <listener class="com.github.thermoweb.encryptstringplugin.listeners.MyProjectManagerListener"
-                  topic="com.intellij.openapi.project.ProjectManagerListener"/>
-    </applicationListeners>
+    <actions>
+        <action id="org.thermoweb.intellij.plugin.encrypt.UncryptStringAction"
+                class="org.thermoweb.intellij.plugin.encrypt.UncryptStringAction"
+                icon="AllIcons.Nodes.Public"
+                text="Decrypt String"
+                description="Decrypt string">
+            <add-to-group group-id="EditorPopupMenu" anchor="first"/>
+        </action>
+        <action id="org.thermoweb.intellij.plugin.encrypt.EncryptStringAction"
+                class="org.thermoweb.intellij.plugin.encrypt.EncryptStringAction"
+                icon="AllIcons.Nodes.Private"
+                text="Encrypt String"
+                description="Encrypt string">
+            <add-to-group group-id="EditorPopupMenu" anchor="first"/>
+        </action>
+    </actions>
 </idea-plugin>
