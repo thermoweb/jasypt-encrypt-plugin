@@ -1,7 +1,7 @@
-package org.jetbrains.plugins.template.services
+package com.github.thermoweb.encryptstringplugin.services
 
 import com.intellij.openapi.project.Project
-import org.jetbrains.plugins.template.MyBundle
+import com.github.thermoweb.encryptstringplugin.MyBundle
 
 class MyProjectService(project: Project) {
 
