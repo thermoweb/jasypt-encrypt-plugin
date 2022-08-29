@@ -3,5 +3,8 @@
 # encrypt-string-plugin Changelog
 
 ## [Unreleased]
+
+## [0.1.0] 2022-08-30
 ### Added
-- Initial scaffold created from [IntelliJ Platform Plugin Template](https://github.com/JetBrains/intellij-platform-plugin-template)
+- Actions to encrypt or decrypt selected string.
+- the popup asks for password, algorithm and if we want to wrap/unwrap with "ENC()"

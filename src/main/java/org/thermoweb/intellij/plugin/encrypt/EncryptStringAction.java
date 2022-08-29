@@ -1,6 +1,7 @@
 package org.thermoweb.intellij.plugin.encrypt;
 
-import org.apache.commons.lang.StringUtils;
+import java.util.Map;
+
 import org.jetbrains.annotations.NotNull;
 
 import com.intellij.openapi.actionSystem.AnAction;
@@ -11,26 +12,29 @@ import com.intellij.openapi.editor.Caret;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.ui.Messages;
+
+import static org.thermoweb.intellij.plugin.encrypt.CipherInformationsDialog.ALGORITHM_FIELD_NAME;
+import static org.thermoweb.intellij.plugin.encrypt.CipherInformationsDialog.ENCAPSULATE_FIELD_NAME;
+import static org.thermoweb.intellij.plugin.encrypt.CipherInformationsDialog.PASSWORD_FIELD_NAME;
 
 public class EncryptStringAction extends AnAction {
-	private final CipherUtils cipherUtils = new CipherUtils();
-
 	@Override
 	public void actionPerformed(@NotNull final AnActionEvent event) {
-		String password = Messages.showPasswordDialog("Password :", "Encrypt String");
-		if (StringUtils.isEmpty(password)) {
+		CipherInformationsDialog dialog = new CipherInformationsDialog();
+		if (!dialog.showAndGet()) {
 			return;
 		}
+
+		Map<String, String> values = dialog.getValues();
 
 		Editor editor = event.getRequiredData(CommonDataKeys.EDITOR);
 		Project project = event.getRequiredData(CommonDataKeys.PROJECT);
 		Document document = editor.getDocument();
 		Caret primaryCaret = editor.getCaretModel().getPrimaryCaret();
-
+		String newValue = CipherUtils.encrypt(primaryCaret.getSelectedText(), values.get(PASSWORD_FIELD_NAME), values.get(ALGORITHM_FIELD_NAME));
+		final String cipheredPassword = "true".equals(values.get(ENCAPSULATE_FIELD_NAME)) ? "ENC(" + newValue + ")" : newValue;
 		WriteCommandAction.runWriteCommandAction(project,
-				() -> document.replaceString(primaryCaret.getSelectionStart(), primaryCaret.getSelectionEnd(),
-						cipherUtils.encrypt(primaryCaret.getSelectedText(), password)));
+				() -> document.replaceString(primaryCaret.getSelectionStart(), primaryCaret.getSelectionEnd(), cipheredPassword));
 
 		primaryCaret.removeSelection();
 	}
