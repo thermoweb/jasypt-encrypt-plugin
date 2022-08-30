@@ -33,10 +33,6 @@ public class CipherInformationsDialog extends DialogWrapper {
 		init();
 	}
 
-	protected CipherInformationsDialog(@Nullable final Project project) {
-		super(project);
-	}
-
 	@Override
 	protected @Nullable JComponent createCenterPanel() {
 		DialogPanel dialogPanel = new DialogPanel(new GridBagLayout());
@@ -62,6 +58,8 @@ public class CipherInformationsDialog extends DialogWrapper {
 
 		c.gridx = 0;
 		c.gridy = 2;
+		checkbox.setText("surrounded by ENC(...)");
+		checkbox.setName(ENCAPSULATE_FIELD_NAME);
 		dialogPanel.add(checkbox, c);
 		return dialogPanel;
 	}
@@ -70,7 +68,7 @@ public class CipherInformationsDialog extends DialogWrapper {
 		HashMap<String, String> values = new HashMap<>();
 		values.put(comboBox.getName(), comboBox.getText());
 		values.put(passwordTextField.getName(), passwordTextField.getText());
-		values.put(checkbox.getText(), String.valueOf(checkbox.isSelected()));
+		values.put(checkbox.getName(), String.valueOf(checkbox.isSelected()));
 		return values;
 	}
 }
