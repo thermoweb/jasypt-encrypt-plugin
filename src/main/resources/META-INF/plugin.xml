@@ -2,7 +2,7 @@
 <idea-plugin>
     <id>com.github.thermoweb.encryptstringplugin</id>
     <name>Encrypt Text</name>
-    <description>Adds an editor popup menu to cipher selected string in editor.</description>
+    <description>Adds an editor popup menu to cipher selected string in editor. This plugin use the jasypt library to encrypt (see http://www.jasypt.org/)</description>
     <vendor>thermoweb</vendor>
 
     <depends>com.intellij.modules.platform</depends>

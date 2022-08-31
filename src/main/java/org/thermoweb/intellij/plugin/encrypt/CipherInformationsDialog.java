@@ -12,7 +12,6 @@ import javax.swing.JLabel;
 
 import org.jetbrains.annotations.Nullable;
 
-import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogPanel;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.ui.EditorComboBox;
@@ -51,9 +50,10 @@ public class CipherInformationsDialog extends DialogWrapper {
 		c.gridx = 1;
 		comboBox.setName(ALGORITHM_FIELD_NAME);
 		comboBox.removeAllItems();
-		comboBox.setEnabled(Algorithm.values().length > 1);
-		Arrays.stream(Algorithm.values()).forEach(a -> comboBox.appendItem(a.getCode()));
-		comboBox.setSelectedItem(Algorithm.PBE.getCode());
+		comboBox.setEnabled(Algorithms.values().length > 1);
+		Arrays.stream(Algorithms.values()).forEach(a -> comboBox.appendItem(a.getCode()));
+
+		comboBox.setSelectedItem(Algorithms.PBEWITHHMACSHA1ANDAES_128.getCode());
 		dialogPanel.add(comboBox, c);
 
 		c.gridx = 0;
