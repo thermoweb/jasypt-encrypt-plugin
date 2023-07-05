@@ -4,6 +4,8 @@
 
 ## [Unreleased]
 
+## [1.1.0] - 2023-07-05
+
 ## [0.2.0]
 ### Added
 - new cipher algorithms
