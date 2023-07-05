@@ -1,11 +1,15 @@
 package org.thermoweb.intellij.plugin.encrypt;
 
-import java.awt.*;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
-import javax.swing.*;
+import javax.swing.JCheckBox;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
 
 import org.jetbrains.annotations.Nullable;
 
@@ -23,9 +27,11 @@ public class CipherInformationsDialog extends DialogWrapper {
     private final EditorComboBox comboBox = new EditorComboBox(ALGORITHM_FIELD_NAME);
     private final PasswordFieldPanel passwordTextField = new PasswordFieldPanel();
     private final JCheckBox checkbox = new JCheckBox(ENCAPSULATE_FIELD_NAME, true);
+    private final JasyptPluginSettings settings;
 
-    public CipherInformationsDialog() {
+    public CipherInformationsDialog(JasyptPluginSettings settings) {
         super(true);
+        this.settings = settings;
         setTitle("Password");
         init();
     }
@@ -50,13 +56,18 @@ public class CipherInformationsDialog extends DialogWrapper {
         comboBox.removeAllItems();
         comboBox.setEnabled(Algorithms.values().length > 1);
         Arrays.stream(Algorithms.values()).forEach(a -> comboBox.appendItem(a.getCode()));
-        comboBox.setSelectedItem(Algorithms.PBEWITHHMACSHA1ANDAES_128.getCode());
+        Optional.ofNullable(settings)
+                .map(s -> s.algorithm)
+                .ifPresent(comboBox::setSelectedItem);
         dialogPanel.add(comboBox, c);
 
         c.gridx = 0;
         c.gridy = 2;
         checkbox.setText("surrounded by ENC(...)");
         checkbox.setName(ENCAPSULATE_FIELD_NAME);
+        Optional.ofNullable(settings)
+                .map(s -> s.isEncapsulated)
+                .ifPresent(checkbox::setSelected);
         dialogPanel.add(checkbox, c);
         return dialogPanel;
     }

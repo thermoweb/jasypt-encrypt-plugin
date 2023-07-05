@@ -32,7 +32,7 @@ public class UncryptStringAction extends JasyptAction {
         WriteCommandAction.runWriteCommandAction(project,
                 () -> document.replaceString(primaryCaret.getSelectionStart(), primaryCaret.getSelectionEnd(),
                         CipherUtils.decrypt(textToUncrypt.get(), values.get(PASSWORD_FIELD_NAME), values.get(ALGORITHM_FIELD_NAME))));
-
+        updateSettings();
         primaryCaret.removeSelection();
     }
 }

@@ -28,7 +28,7 @@ public class EncryptStringAction extends JasyptAction {
 		final String cipheredPassword = "true".equals(values.get(ENCAPSULATE_FIELD_NAME)) ? "ENC(" + newValue + ")" : newValue;
 		WriteCommandAction.runWriteCommandAction(project,
 				() -> document.replaceString(primaryCaret.getSelectionStart(), primaryCaret.getSelectionEnd(), cipheredPassword));
-
+		updateSettings();
 		primaryCaret.removeSelection();
 	}
 }

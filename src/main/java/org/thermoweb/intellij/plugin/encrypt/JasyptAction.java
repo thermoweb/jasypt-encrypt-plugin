@@ -27,12 +27,13 @@ public class JasyptAction extends AnAction {
 
     @Override
     public void actionPerformed(@NotNull AnActionEvent event) {
-        dialog = new CipherInformationsDialog();
-
         editor = event.getRequiredData(CommonDataKeys.EDITOR);
         project = event.getRequiredData(CommonDataKeys.PROJECT);
         document = editor.getDocument();
         primaryCaret = editor.getCaretModel().getPrimaryCaret();
+
+        JasyptPluginSettings settings = JasyptPluginSettings.getInstance(project);
+        dialog = new CipherInformationsDialog(settings);
     }
 
     @Override
@@ -56,5 +57,11 @@ public class JasyptAction extends AnAction {
         return matches.find() && "true".equals(dialog.getValues().get(ENCAPSULATE_FIELD_NAME)) ?
                 matches.group(1) :
                 text;
+    }
+
+    protected void updateSettings() {
+        JasyptPluginSettings settings = project.getService(JasyptPluginSettings.class);
+        settings.algorithm = dialog.getValues().get(CipherInformationsDialog.ALGORITHM_FIELD_NAME);
+        settings.isEncapsulated = "true".equals(dialog.getValues().get(ENCAPSULATE_FIELD_NAME));
     }
 }

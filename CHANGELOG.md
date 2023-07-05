@@ -2,9 +2,10 @@
 
 # encrypt-string-plugin Changelog
 
-## [Unreleased]
+## [0.2.0]
 ### Added
 - new cipher algorithms
+- remember preferred options (by project)
 
 ## [0.1.0] 2022-08-30
 ### Added
