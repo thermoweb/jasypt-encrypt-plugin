@@ -7,6 +7,9 @@
 
     <depends>com.intellij.modules.platform</depends>
 
+    <extensions defaultExtensionNs="com.intellij">
+        <projectService serviceImplementation="org.thermoweb.intellij.plugin.encrypt.JasyptPluginSettings" />
+    </extensions>
     <actions>
         <action id="org.thermoweb.intellij.plugin.encrypt.UncryptStringAction"
                 class="org.thermoweb.intellij.plugin.encrypt.UncryptStringAction"
