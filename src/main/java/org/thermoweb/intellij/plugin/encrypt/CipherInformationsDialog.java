@@ -65,9 +65,9 @@ public class CipherInformationsDialog extends DialogWrapper {
         c.gridy = 2;
         checkbox.setText("surrounded by ENC(...)");
         checkbox.setName(ENCAPSULATE_FIELD_NAME);
-        Optional.ofNullable(settings)
+        checkbox.setSelected(Optional.ofNullable(settings)
                 .map(s -> s.isEncapsulated)
-                .ifPresent(checkbox::setSelected);
+                .orElse(true));
         dialogPanel.add(checkbox, c);
         return dialogPanel;
     }

@@ -2,6 +2,8 @@
 
 # encrypt-string-plugin Changelog
 
+## [Unreleased]
+
 ## [0.2.0]
 ### Added
 - new cipher algorithms
