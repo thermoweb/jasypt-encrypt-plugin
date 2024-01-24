@@ -22,14 +22,24 @@ public class UncryptStringAction extends JasyptAction {
 
         Map<String, String> values = dialog.getValues();
         final Optional<String> textToUncrypt = getSelectedText();
-        if (textToUncrypt.isEmpty()) {
-            return;
-        }
+        textToUncrypt.ifPresent(text -> {
+            WriteCommandAction.runWriteCommandAction(project,
+                    () -> {
+                        try {
+                            document.replaceString(primaryCaret.getSelectionStart(), primaryCaret.getSelectionEnd(),
+                                    CipherUtils.decrypt(text, values.get(PASSWORD_FIELD_NAME), values.get(ALGORITHM_FIELD_NAME)));
+                        } catch (JasyptPluginException e) {
+                            Notifier.notifyError(project, "Failed to decrypt string, please verify provided password or algorithm.");
+                        }
+                    });
+            updateSettings();
+            primaryCaret.removeSelection();
+        });
 
-        WriteCommandAction.runWriteCommandAction(project,
-                () -> document.replaceString(primaryCaret.getSelectionStart(), primaryCaret.getSelectionEnd(),
-                        CipherUtils.decrypt(textToUncrypt.get(), values.get(PASSWORD_FIELD_NAME), values.get(ALGORITHM_FIELD_NAME))));
-        updateSettings();
-        primaryCaret.removeSelection();
+
+    }
+
+    private void performAction(Object decrypt) {
+
     }
 }

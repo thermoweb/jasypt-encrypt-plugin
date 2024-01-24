@@ -3,6 +3,8 @@
 # encrypt-string-plugin Changelog
 
 ## [Unreleased]
+### Added
+- when an error occurs during decrypt, a notification is shown in the ide.
 
 ## [1.1.0] - 2023-07-05
 

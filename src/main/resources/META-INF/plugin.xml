@@ -9,6 +9,9 @@
 
     <extensions defaultExtensionNs="com.intellij">
         <projectService serviceImplementation="org.thermoweb.intellij.plugin.encrypt.JasyptPluginSettings" />
+        <notificationGroup id="jasypt encryption error"
+                           displayType="BALLOON"
+                           key="notification.group.name"/>
     </extensions>
     <actions>
         <action id="org.thermoweb.intellij.plugin.encrypt.UncryptStringAction"
