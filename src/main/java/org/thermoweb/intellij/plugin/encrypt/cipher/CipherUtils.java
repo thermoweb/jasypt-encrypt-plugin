@@ -1,10 +1,11 @@
-package org.thermoweb.intellij.plugin.encrypt;
+package org.thermoweb.intellij.plugin.encrypt.cipher;
 
 import org.jasypt.encryption.StringEncryptor;
 import org.jasypt.encryption.pbe.StandardPBEStringEncryptor;
 import org.jasypt.encryption.pbe.config.SimpleStringPBEConfig;
 import org.jasypt.exceptions.EncryptionOperationNotPossibleException;
 import org.jasypt.iv.RandomIvGenerator;
+import org.thermoweb.intellij.plugin.encrypt.exceptions.JasyptPluginException;
 
 public class CipherUtils {
 	private CipherUtils() {

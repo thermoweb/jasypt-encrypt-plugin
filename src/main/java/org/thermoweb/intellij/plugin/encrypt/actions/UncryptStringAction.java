@@ -1,9 +1,12 @@
-package org.thermoweb.intellij.plugin.encrypt;
+package org.thermoweb.intellij.plugin.encrypt.actions;
 
 import java.util.Map;
 import java.util.Optional;
 
 import org.jetbrains.annotations.NotNull;
+import org.thermoweb.intellij.plugin.encrypt.Notifier;
+import org.thermoweb.intellij.plugin.encrypt.cipher.CipherUtils;
+import org.thermoweb.intellij.plugin.encrypt.exceptions.JasyptPluginException;
 
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.command.WriteCommandAction;
@@ -36,10 +39,6 @@ public class UncryptStringAction extends JasyptAction {
             primaryCaret.removeSelection();
         });
 
-
-    }
-
-    private void performAction(Object decrypt) {
 
     }
 }

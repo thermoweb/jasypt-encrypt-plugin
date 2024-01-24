@@ -1,4 +1,4 @@
-package org.thermoweb.intellij.plugin.encrypt;
+package org.thermoweb.intellij.plugin.encrypt.exceptions;
 
 public class JasyptPluginException extends Exception {
 

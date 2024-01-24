@@ -1,6 +1,8 @@
 package org.thermoweb.intellij.plugin.encrypt;
 
 import org.junit.Test;
+import org.thermoweb.intellij.plugin.encrypt.cipher.CipherUtils;
+import org.thermoweb.intellij.plugin.encrypt.exceptions.JasyptPluginException;
 
 import static org.junit.Assert.*;
 

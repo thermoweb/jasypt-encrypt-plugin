@@ -2,27 +2,34 @@
 <idea-plugin>
     <id>com.github.thermoweb.encryptstringplugin</id>
     <name>Jasypt Encrypt Text</name>
-    <description>Adds an editor popup menu to cipher selected string in editor. This plugin use the jasypt library to encrypt (see http://www.jasypt.org/)</description>
+    <description>Adds an editor popup menu to cipher selected string in editor. This plugin use the jasypt library to
+        encrypt (see http://www.jasypt.org/)
+    </description>
     <vendor>thermoweb</vendor>
 
     <depends>com.intellij.modules.platform</depends>
+    <depends>org.jetbrains.plugins.yaml</depends>
 
     <extensions defaultExtensionNs="com.intellij">
-        <projectService serviceImplementation="org.thermoweb.intellij.plugin.encrypt.JasyptPluginSettings" />
+        <projectService serviceImplementation="org.thermoweb.intellij.plugin.encrypt.JasyptPluginSettings"/>
         <notificationGroup id="jasypt encryption error"
                            displayType="BALLOON"
                            key="notification.group.name"/>
+        <codeInsight.lineMarkerProvider
+                language="yaml"
+                implementationClass="org.thermoweb.intellij.plugin.encrypt.DecryptLineMarkerProvider"/>
+
     </extensions>
     <actions>
-        <action id="org.thermoweb.intellij.plugin.encrypt.UncryptStringAction"
-                class="org.thermoweb.intellij.plugin.encrypt.UncryptStringAction"
+        <action id="org.thermoweb.intellij.plugin.encrypt.actions.UncryptStringAction"
+                class="org.thermoweb.intellij.plugin.encrypt.actions.UncryptStringAction"
                 icon="AllIcons.Nodes.Public"
                 text="Decrypt String"
                 description="Decrypt string">
             <add-to-group group-id="EditorPopupMenu" anchor="first"/>
         </action>
-        <action id="org.thermoweb.intellij.plugin.encrypt.EncryptStringAction"
-                class="org.thermoweb.intellij.plugin.encrypt.EncryptStringAction"
+        <action id="org.thermoweb.intellij.plugin.encrypt.actions.EncryptStringAction"
+                class="org.thermoweb.intellij.plugin.encrypt.actions.EncryptStringAction"
                 icon="AllIcons.Nodes.Private"
                 text="Encrypt String"
                 description="Encrypt string">
