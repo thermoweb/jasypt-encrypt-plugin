@@ -1,9 +1,11 @@
-package org.thermoweb.intellij.plugin.encrypt;
+package org.thermoweb.intellij.plugin.encrypt.cipher;
 
 import org.jasypt.encryption.StringEncryptor;
 import org.jasypt.encryption.pbe.StandardPBEStringEncryptor;
 import org.jasypt.encryption.pbe.config.SimpleStringPBEConfig;
+import org.jasypt.exceptions.EncryptionOperationNotPossibleException;
 import org.jasypt.iv.RandomIvGenerator;
+import org.thermoweb.intellij.plugin.encrypt.exceptions.JasyptPluginException;
 
 public class CipherUtils {
 	private CipherUtils() {
@@ -14,8 +16,12 @@ public class CipherUtils {
 		return stringEncryptor(password, algorithm).encrypt(value);
 	}
 
-	public static String decrypt(final String value, final String password, final String algorithm) {
-		return stringEncryptor(password, algorithm).decrypt(value);
+	public static String decrypt(final String value, final String password, final String algorithm) throws JasyptPluginException {
+		try {
+			return stringEncryptor(password, algorithm).decrypt(value);
+		} catch (EncryptionOperationNotPossibleException e) {
+			throw new JasyptPluginException(e);
+		}
 	}
 
 	private static StringEncryptor stringEncryptor(final String password, final String algorithm) {

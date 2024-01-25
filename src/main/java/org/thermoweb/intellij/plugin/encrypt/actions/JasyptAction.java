@@ -1,10 +1,12 @@
-package org.thermoweb.intellij.plugin.encrypt;
+package org.thermoweb.intellij.plugin.encrypt.actions;
 
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.jetbrains.annotations.NotNull;
+import org.thermoweb.intellij.plugin.encrypt.CipherInformationsDialog;
+import org.thermoweb.intellij.plugin.encrypt.JasyptPluginSettings;
 
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
