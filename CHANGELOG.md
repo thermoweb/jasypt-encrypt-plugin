@@ -4,6 +4,10 @@
 
 ## Unreleased
 
+### Added
+
+- checks that the selected text is encapsulated and auto-select the "ENC(...)" checkbox.
+
 ## 1.2.0-beta - 2024-01-25
 
 ### Added
