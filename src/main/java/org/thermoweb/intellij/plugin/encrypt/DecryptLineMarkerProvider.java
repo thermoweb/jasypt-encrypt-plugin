@@ -24,7 +24,7 @@ public class DecryptLineMarkerProvider implements LineMarkerProvider {
             return new LineMarkerInfo<>(element,
                     element.getTextRange(),
                     AllIcons.Nodes.Private,
-                    (elem) -> "Decrypt string with jasypt",
+                    elem -> "Decrypt string with jasypt",
                     new DecryptNavigationHandler(),
                     GutterIconRenderer.Alignment.CENTER,
                     () -> "Decrypt string with jasypt");

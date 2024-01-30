@@ -2,6 +2,7 @@ package org.thermoweb.intellij.plugin.encrypt.cipher;
 
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -28,7 +29,11 @@ public class CipherDecryptCommand {
     }
 
     public void execute() {
-        CipherInformationsDialog dialog = new CipherInformationsDialog(JasyptPluginSettings.getInstance(property.getProject()));
+        boolean isTextEncapsulated = Optional.ofNullable(property.getText())
+                .map(String::trim)
+                .map(s -> s.startsWith("ENC("))
+                .orElse(false);
+        CipherInformationsDialog dialog = new CipherInformationsDialog(JasyptPluginSettings.getInstance(property.getProject()), isTextEncapsulated);
         if (!dialog.showAndGet()) {
             return;
         }
