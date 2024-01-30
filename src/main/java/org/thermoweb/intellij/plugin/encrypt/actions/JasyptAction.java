@@ -35,7 +35,8 @@ public class JasyptAction extends AnAction {
         primaryCaret = editor.getCaretModel().getPrimaryCaret();
 
         JasyptPluginSettings settings = JasyptPluginSettings.getInstance(project);
-        dialog = new CipherInformationsDialog(settings);
+        boolean isEncapsulated = getSelectedText().map(String::trim).map(s -> s.startsWith("ENC(")).orElse(false);
+        dialog = new CipherInformationsDialog(settings, isEncapsulated);
     }
 
     @Override
@@ -56,7 +57,7 @@ public class JasyptAction extends AnAction {
 
     private String matchSelected(String text) {
         Matcher matches = pattern.matcher(text);
-        return matches.find() && "true".equals(dialog.getValues().get(ENCAPSULATE_FIELD_NAME)) ?
+        return matches.find() && "true".equals(Optional.ofNullable(dialog).map(d -> d.getValues().get(ENCAPSULATE_FIELD_NAME)).orElse("false")) ?
                 matches.group(1) :
                 text;
     }

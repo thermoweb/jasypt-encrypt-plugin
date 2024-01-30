@@ -28,10 +28,16 @@ public class CipherInformationsDialog extends DialogWrapper {
     private final PasswordFieldPanel passwordTextField = new PasswordFieldPanel();
     private final JCheckBox checkbox = new JCheckBox(ENCAPSULATE_FIELD_NAME, true);
     private final JasyptPluginSettings settings;
+    private final boolean textIsEncapsulated;
 
     public CipherInformationsDialog(JasyptPluginSettings settings) {
+        this(settings, false);
+    }
+
+    public CipherInformationsDialog(JasyptPluginSettings settings, boolean textIsEncapsulated) {
         super(true);
         this.settings = settings;
+        this.textIsEncapsulated = textIsEncapsulated;
         setTitle("Password");
         init();
     }
@@ -65,9 +71,10 @@ public class CipherInformationsDialog extends DialogWrapper {
         c.gridy = 2;
         checkbox.setText("surrounded by ENC(...)");
         checkbox.setName(ENCAPSULATE_FIELD_NAME);
-        checkbox.setSelected(Optional.ofNullable(settings)
+        Boolean encapsulatedSetting = Optional.ofNullable(settings)
                 .map(s -> s.isEncapsulated)
-                .orElse(true));
+                .orElse(true);
+        checkbox.setSelected(encapsulatedSetting || textIsEncapsulated);
         dialogPanel.add(checkbox, c);
         return dialogPanel;
     }
