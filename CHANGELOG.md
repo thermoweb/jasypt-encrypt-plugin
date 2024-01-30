@@ -4,9 +4,13 @@
 
 ## Unreleased
 
+## 1.2.0-beta.2 - 2024-01-30
+
 ### Added
 
 - checks that the selected text is encapsulated and auto-select the "ENC(...)" checkbox.
+- when an error occurs during decrypt, a notification is shown in the ide.
+- Line marker on yaml file with encrypted string (with ENC(...))
 
 ## 1.2.0-beta - 2024-01-25
 
