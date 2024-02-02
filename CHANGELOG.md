@@ -4,10 +4,15 @@
 
 ## Unreleased
 
+## 1.2.0-beta.3 - 2024-02-02
+
 ### Added
 
 - Remember password option
 - icon for line marker indicates if the stored password is valid or not
+- checks that the selected text is encapsulated and auto-select the "ENC(...)" checkbox.
+- when an error occurs during decrypt, a notification is shown in the ide.
+- Line marker on yaml file with encrypted string (with ENC(...))
 
 ## 1.2.0-beta.2 - 2024-01-30
 
