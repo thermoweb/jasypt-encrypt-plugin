@@ -14,6 +14,8 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiLanguageInjectionHost;
 import com.intellij.psi.impl.source.tree.LeafPsiElement;
 
+import javax.swing.Icon;
+
 public class DecryptLineMarkerProvider implements LineMarkerProvider {
 
     @Override
@@ -21,15 +23,27 @@ public class DecryptLineMarkerProvider implements LineMarkerProvider {
         if (element instanceof LeafPsiElement
                 && element.getText().startsWith("ENC(")
                 && element.getParent() instanceof PsiLanguageInjectionHost) {
+            Icon cryptedIcon = AllIcons.Nodes.Private;
+            if (checkStoredPassword(element)) {
+                cryptedIcon = AllIcons.Nodes.Public;
+            }
             return new LineMarkerInfo<>(element,
                     element.getTextRange(),
-                    AllIcons.Nodes.Private,
+                    cryptedIcon,
                     elem -> "Decrypt string with jasypt",
                     new DecryptNavigationHandler(),
                     GutterIconRenderer.Alignment.CENTER,
                     () -> "Decrypt string with jasypt");
         }
         return null;
+    }
+
+    private boolean checkStoredPassword(PsiElement element) {
+        if (element.getParent() instanceof PsiLanguageInjectionHost property) {
+            return CipherDecryptCommand.of(property).check();
+        }
+
+        return false;
     }
 
     static class DecryptNavigationHandler implements GutterIconNavigationHandler<PsiElement> {

@@ -31,6 +31,26 @@ public class CipherDecryptCommand {
         return new CipherDecryptCommand(property);
     }
 
+    public boolean check() {
+        boolean isTextEncapsulated = Optional.ofNullable(property.getText())
+                .map(String::trim)
+                .map(s -> s.startsWith("ENC("))
+                .orElse(false);
+        Optional<CipherConfiguration> storedConfiguration = SecretVault.getSecrets(property.getContainingFile().getVirtualFile().getPath());
+        if (storedConfiguration.isEmpty()) {
+            return false;
+        }
+
+        CipherConfiguration configuration = storedConfiguration.get();
+        String textToUncrypt = getTextToUncrypt(property.getText(), isTextEncapsulated);
+        try {
+            CipherUtils.decrypt(textToUncrypt, configuration.password(), configuration.algorithm().getCode());
+            return true;
+        } catch (JasyptPluginException e) {
+            return false;
+        }
+    }
+
     public void execute() {
         boolean isTextEncapsulated = Optional.ofNullable(property.getText())
                 .map(String::trim)
