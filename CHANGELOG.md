@@ -4,6 +4,10 @@
 
 ## Unreleased
 
+### Added
+
+- Remember password option
+
 ## 1.2.0-beta.2 - 2024-01-30
 
 ### Added

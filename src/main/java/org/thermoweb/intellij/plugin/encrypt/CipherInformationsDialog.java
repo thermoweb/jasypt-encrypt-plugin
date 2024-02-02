@@ -1,5 +1,6 @@
 package org.thermoweb.intellij.plugin.encrypt;
 
+import java.awt.Component;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.util.Arrays;
@@ -23,10 +24,12 @@ public class CipherInformationsDialog extends DialogWrapper {
     public static final String ALGORITHM_FIELD_NAME = "algorithm";
     public static final String PASSWORD_FIELD_NAME = "password";
     public static final String ENCAPSULATE_FIELD_NAME = "encapsulate";
+    public static final String REMEMBER_PASSWORD = "rememberPassword";
 
     private final EditorComboBox comboBox = new EditorComboBox(ALGORITHM_FIELD_NAME);
     private final PasswordFieldPanel passwordTextField = new PasswordFieldPanel();
-    private final JCheckBox checkbox = new JCheckBox(ENCAPSULATE_FIELD_NAME, true);
+    private final JCheckBox encapsulateCheckBox = new JCheckBox(ENCAPSULATE_FIELD_NAME, true);
+    private final JCheckBox rememberPasswordCheckBox = new JCheckBox(REMEMBER_PASSWORD, true);
     private final JasyptPluginSettings settings;
     private final boolean textIsEncapsulated;
 
@@ -38,53 +41,94 @@ public class CipherInformationsDialog extends DialogWrapper {
         super(true);
         this.settings = settings;
         this.textIsEncapsulated = textIsEncapsulated;
+        passwordTextField.setName(PASSWORD_FIELD_NAME);
+        encapsulateCheckBox.setText("surrounded by ENC(...)");
+        encapsulateCheckBox.setName(ENCAPSULATE_FIELD_NAME);
+        comboBox.setName(ALGORITHM_FIELD_NAME);
+        rememberPasswordCheckBox.setName(REMEMBER_PASSWORD);
         setTitle("Password");
         init();
     }
 
     @Override
     protected @Nullable JComponent createCenterPanel() {
-        DialogPanel dialogPanel = new DialogPanel(new GridBagLayout());
-        GridBagConstraints c = new GridBagConstraints(0, 0, 1, 1, 1, 1, GridBagConstraints.NORTHWEST, GridBagConstraints.BOTH,
-                new JBInsets(2, 4, 2, 1), 0, 0);
-        JLabel passwordLabel = new JLabel(PASSWORD_FIELD_NAME);
-        dialogPanel.add(passwordLabel, c);
-        c.gridx = 1;
-        passwordTextField.setName(PASSWORD_FIELD_NAME);
-        dialogPanel.add(passwordTextField, c);
+        DialogCreator dialogCreator = DialogCreator.builder();
 
-        c.gridy = 1;
-        c.gridx = 0;
-        JLabel algoLabel = new JLabel(ALGORITHM_FIELD_NAME);
-        dialogPanel.add(algoLabel, c);
-        c.gridx = 1;
-        comboBox.setName(ALGORITHM_FIELD_NAME);
+        dialogCreator.add(new JLabel(PASSWORD_FIELD_NAME));
+        dialogCreator.add(passwordTextField);
+        dialogCreator.add(new JLabel(ALGORITHM_FIELD_NAME));
         comboBox.removeAllItems();
         comboBox.setEnabled(Algorithms.values().length > 1);
         Arrays.stream(Algorithms.values()).forEach(a -> comboBox.appendItem(a.getCode()));
         Optional.ofNullable(settings)
-                .map(s -> s.algorithm)
+                .map(JasyptPluginSettings::getAlgorithm)
                 .ifPresent(comboBox::setSelectedItem);
-        dialogPanel.add(comboBox, c);
+        dialogCreator.add(comboBox);
 
-        c.gridx = 0;
-        c.gridy = 2;
-        checkbox.setText("surrounded by ENC(...)");
-        checkbox.setName(ENCAPSULATE_FIELD_NAME);
         Boolean encapsulatedSetting = Optional.ofNullable(settings)
-                .map(s -> s.isEncapsulated)
+                .map(JasyptPluginSettings::isEncapsulated)
                 .orElse(true);
-        checkbox.setSelected(encapsulatedSetting || textIsEncapsulated);
-        dialogPanel.add(checkbox, c);
-        return dialogPanel;
+        encapsulateCheckBox.setSelected(encapsulatedSetting || textIsEncapsulated);
+        dialogCreator.add(encapsulateCheckBox);
+
+        rememberPasswordCheckBox.setText("remember password");
+        Boolean rememberPasswordSetting = Optional.ofNullable(settings)
+                .map(JasyptPluginSettings::isRememberPassword)
+                .orElse(false);
+        rememberPasswordCheckBox.setSelected(rememberPasswordSetting);
+        dialogCreator.add(rememberPasswordCheckBox);
+
+        return dialogCreator.build();
     }
 
     public Map<String, String> getValues() {
         Map<String, String> values = new HashMap<>();
         values.put(comboBox.getName(), comboBox.getText());
         values.put(passwordTextField.getName(), passwordTextField.getText());
-        values.put(checkbox.getName(), String.valueOf(checkbox.isSelected()));
+        values.put(encapsulateCheckBox.getName(), String.valueOf(encapsulateCheckBox.isSelected()));
+        values.put(rememberPasswordCheckBox.getName(), String.valueOf(rememberPasswordCheckBox.isSelected()));
         return values;
+    }
+
+    public void setPassword(String password) {
+        passwordTextField.setText(password);
+    }
+
+    public void setAlgorithm(String algorithm) {
+        comboBox.setSelectedItem(algorithm);
+    }
+
+    static class DialogCreator {
+        private final DialogPanel dialogPanel;
+        private final GridBagConstraints grid;
+
+        private DialogCreator() {
+            dialogPanel = new DialogPanel(new GridBagLayout());
+            grid = new GridBagConstraints(0, 0, 1, 1, 1, 1, GridBagConstraints.NORTHWEST, GridBagConstraints.BOTH,
+                    new JBInsets(2, 4, 2, 1), 0, 0);
+        }
+
+        public static DialogCreator builder() {
+            return new DialogCreator();
+        }
+
+        public void newLine() {
+            grid.gridy += 1;
+            grid.gridx = 0;
+        }
+
+        public void add(Component component) {
+            dialogPanel.add(component, grid);
+            grid.gridx += 1;
+            if (grid.gridx > grid.gridwidth) {
+                newLine();
+            }
+        }
+
+        public DialogPanel build() {
+            return dialogPanel;
+        }
+
     }
 
     @Override
