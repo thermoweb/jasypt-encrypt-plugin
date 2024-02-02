@@ -4,7 +4,7 @@ import org.junit.Test;
 import org.thermoweb.intellij.plugin.encrypt.cipher.CipherUtils;
 import org.thermoweb.intellij.plugin.encrypt.exceptions.JasyptPluginException;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 public class CipherUtilsTest {
 

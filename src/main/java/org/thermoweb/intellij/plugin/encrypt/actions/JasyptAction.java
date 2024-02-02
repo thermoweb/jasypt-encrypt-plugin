@@ -18,7 +18,6 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 
 import static org.thermoweb.intellij.plugin.encrypt.CipherInformationsDialog.ENCAPSULATE_FIELD_NAME;
-import static org.thermoweb.intellij.plugin.encrypt.CipherInformationsDialog.REMEMBER_PASSWORD;
 
 public class JasyptAction extends AnAction {
     private final Pattern pattern = Pattern.compile("ENC\\((.*)\\)");
