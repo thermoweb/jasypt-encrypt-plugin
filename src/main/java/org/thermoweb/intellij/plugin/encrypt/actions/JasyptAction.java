@@ -1,5 +1,6 @@
 package org.thermoweb.intellij.plugin.encrypt.actions;
 
+import java.util.Map;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -63,8 +64,7 @@ public class JasyptAction extends AnAction {
     }
 
     protected void updateSettings() {
-        JasyptPluginSettings settings = project.getService(JasyptPluginSettings.class);
-        settings.algorithm = dialog.getValues().get(CipherInformationsDialog.ALGORITHM_FIELD_NAME);
-        settings.isEncapsulated = "true".equals(dialog.getValues().get(ENCAPSULATE_FIELD_NAME));
+        Map<String, String> values = dialog.getValues();
+        JasyptPluginSettings.updateSettings(project, values);
     }
 }

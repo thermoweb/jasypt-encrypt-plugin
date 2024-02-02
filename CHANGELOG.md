@@ -4,6 +4,11 @@
 
 ## Unreleased
 
+### Added
+
+- Remember password option
+- icon for line marker indicates if the stored password is valid or not
+
 ## 1.2.0-beta.2 - 2024-01-30
 
 ### Added

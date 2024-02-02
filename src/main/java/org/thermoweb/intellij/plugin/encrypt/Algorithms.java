@@ -1,5 +1,7 @@
 package org.thermoweb.intellij.plugin.encrypt;
 
+import java.util.Arrays;
+
 public enum Algorithms {
 	PBEWITHHMACSHA1ANDAES_128("PBEWithHmacSHA512AndAES_128"),
 	PBEWITHMD5ANDDES("PBEWithMD5AndDES"),
@@ -26,5 +28,12 @@ public enum Algorithms {
 
 	public String getCode() {
 		return this.code;
+	}
+
+	public static Algorithms fromCode(String code) {
+		return Arrays.stream(values())
+				.filter(a -> a.getCode().equals(code))
+				.findFirst()
+				.orElseThrow();
 	}
 }
