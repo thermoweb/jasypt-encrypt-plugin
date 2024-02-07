@@ -2,8 +2,11 @@
 <idea-plugin>
     <id>com.github.thermoweb.encryptstringplugin</id>
     <name>Jasypt Encrypt Text</name>
-    <description>Adds an editor popup menu to cipher selected string in editor. This plugin use the jasypt library to
-        encrypt (see http://www.jasypt.org/)
+    <description>Jasypt integration plugin:
+        - adds an editor popup menu to encrypt selected string in editor.
+        - adds line markers to uncrypt strings from yaml files.
+
+        This plugin use the jasypt library to encrypt (see http://www.jasypt.org/)
     </description>
     <vendor>thermoweb</vendor>
 
