@@ -9,6 +9,7 @@ import org.jetbrains.annotations.NotNull;
 import org.thermoweb.intellij.plugin.encrypt.CipherInformationsDialog;
 import org.thermoweb.intellij.plugin.encrypt.JasyptPluginSettings;
 
+import com.intellij.openapi.actionSystem.ActionUpdateThread;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
@@ -49,6 +50,11 @@ public class JasyptAction extends AnAction {
         // Set visibility only in the case of
         // existing project editor, and selection
         event.getPresentation().setEnabledAndVisible(project != null && editor != null && editor.getSelectionModel().hasSelection());
+    }
+
+    @Override
+    public @NotNull ActionUpdateThread getActionUpdateThread() {
+        return ActionUpdateThread.BGT;
     }
 
     protected Optional<String> getSelectedText() {
