@@ -8,6 +8,8 @@ import java.util.regex.Pattern;
 import org.jetbrains.annotations.NotNull;
 import org.thermoweb.intellij.plugin.encrypt.CipherInformationsDialog;
 import org.thermoweb.intellij.plugin.encrypt.JasyptPluginSettings;
+import org.thermoweb.intellij.plugin.encrypt.vault.CipherConfiguration;
+import org.thermoweb.intellij.plugin.encrypt.vault.SecretVault;
 
 import com.intellij.openapi.actionSystem.ActionUpdateThread;
 import com.intellij.openapi.actionSystem.AnAction;
@@ -17,6 +19,9 @@ import com.intellij.openapi.editor.Caret;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.psi.PsiDocumentManager;
+import com.intellij.psi.PsiFile;
 
 import static org.thermoweb.intellij.plugin.encrypt.CipherInformationsDialog.ENCAPSULATE_FIELD_NAME;
 
@@ -55,6 +60,18 @@ public class JasyptAction extends AnAction {
     @Override
     public @NotNull ActionUpdateThread getActionUpdateThread() {
         return ActionUpdateThread.BGT;
+    }
+
+    protected Optional<CipherConfiguration> getSecretsFromCurrentFilePath() {
+        return getCurrentFilePath().flatMap(SecretVault::getSecrets);
+    }
+
+    protected Optional<String> getCurrentFilePath() {
+        return Optional.ofNullable(PsiDocumentManager.getInstance(project))
+                .map(psiDocumentManager -> psiDocumentManager.getPsiFile(document))
+                .map(PsiFile::getOriginalFile)
+                .map(PsiFile::getVirtualFile)
+                .map(VirtualFile::getPath);
     }
 
     protected Optional<String> getSelectedText() {

@@ -7,12 +7,9 @@ import org.jetbrains.annotations.NotNull;
 import org.thermoweb.intellij.plugin.encrypt.Notifier;
 import org.thermoweb.intellij.plugin.encrypt.cipher.CipherUtils;
 import org.thermoweb.intellij.plugin.encrypt.exceptions.JasyptPluginException;
-import org.thermoweb.intellij.plugin.encrypt.vault.SecretVault;
 
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.command.WriteCommandAction;
-import com.intellij.openapi.fileEditor.impl.text.TextEditorImpl;
-import com.intellij.openapi.vfs.VirtualFile;
 
 import static org.thermoweb.intellij.plugin.encrypt.CipherInformationsDialog.ALGORITHM_FIELD_NAME;
 import static org.thermoweb.intellij.plugin.encrypt.CipherInformationsDialog.PASSWORD_FIELD_NAME;
@@ -22,14 +19,11 @@ public class UncryptStringAction extends JasyptAction {
     @Override
     public void actionPerformed(@NotNull final AnActionEvent event) {
         super.actionPerformed(event);
-        Optional<String> selectedText = getSelectedText();
-        Optional.ofNullable((TextEditorImpl) event.getDataContext().getData("fileEditor"))
-                .map(TextEditorImpl::getFile)
-                .map(VirtualFile::getPath)
-                .flatMap(SecretVault::getSecrets)
-                .ifPresentOrElse(configuration -> {
+        getSecretsFromCurrentFilePath()
+                .ifPresentOrElse(cipherConfiguration -> {
                             try {
-                                String clearText = CipherUtils.decrypt(selectedText.orElseThrow(), configuration.password(), configuration.algorithm().getCode());
+                                Optional<String> selectedText = getSelectedText();
+                                String clearText = CipherUtils.decrypt(selectedText.orElseThrow(), cipherConfiguration.password(), cipherConfiguration.algorithm().getCode());
                                 setClearText(clearText);
                             } catch (JasyptPluginException e) {
                                 askAndDecrypt();

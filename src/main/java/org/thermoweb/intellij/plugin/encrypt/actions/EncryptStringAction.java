@@ -11,8 +11,6 @@ import org.thermoweb.intellij.plugin.encrypt.vault.SecretVault;
 
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.command.WriteCommandAction;
-import com.intellij.openapi.fileEditor.impl.text.TextEditorImpl;
-import com.intellij.openapi.vfs.VirtualFile;
 
 import static org.thermoweb.intellij.plugin.encrypt.CipherInformationsDialog.*;
 
@@ -20,9 +18,7 @@ public class EncryptStringAction extends JasyptAction {
     @Override
     public void actionPerformed(@NotNull final AnActionEvent event) {
         super.actionPerformed(event);
-        Optional<String> filePath = Optional.ofNullable((TextEditorImpl) event.getDataContext().getData("fileEditor"))
-                .map(TextEditorImpl::getFile)
-                .map(VirtualFile::getPath);
+        Optional<String> filePath = getCurrentFilePath();
         filePath.flatMap(SecretVault::getSecrets)
                 .ifPresent(storedConfiguration -> {
                     dialog.setAlgorithm(storedConfiguration.algorithm().getCode());
