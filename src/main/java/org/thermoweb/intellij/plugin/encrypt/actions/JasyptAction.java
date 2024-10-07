@@ -36,8 +36,11 @@ public class JasyptAction extends AnAction {
 
     @Override
     public void actionPerformed(@NotNull AnActionEvent event) {
-        editor = event.getRequiredData(CommonDataKeys.EDITOR);
-        project = event.getRequiredData(CommonDataKeys.PROJECT);
+        editor = event.getData(CommonDataKeys.EDITOR);
+        project = event.getProject();
+        if (editor == null || project == null) {
+            return;
+        }
         document = editor.getDocument();
         primaryCaret = editor.getCaretModel().getPrimaryCaret();
 
