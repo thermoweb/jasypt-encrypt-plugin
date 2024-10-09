@@ -16,8 +16,7 @@
     <extensions defaultExtensionNs="com.intellij">
         <projectService serviceImplementation="org.thermoweb.intellij.plugin.encrypt.JasyptPluginSettings"/>
         <notificationGroup id="jasypt encryption error"
-                           displayType="BALLOON"
-                           key="notification.group.name"/>
+                           displayType="BALLOON"/>
         <codeInsight.lineMarkerProvider
                 language="yaml"
                 implementationClass="org.thermoweb.intellij.plugin.encrypt.DecryptLineMarkerProvider"/>
