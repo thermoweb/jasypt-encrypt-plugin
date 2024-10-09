@@ -4,7 +4,10 @@
 
 ## Unreleased
 
+## 1.2.1 - 2024-10-09
+
 ### Fixed
+
 - replace deprecated usage of jetbrains api (#17)
 
 ## 1.2.0 - 2024-02-08
