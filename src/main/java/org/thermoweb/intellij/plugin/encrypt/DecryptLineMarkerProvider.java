@@ -22,7 +22,8 @@ public class DecryptLineMarkerProvider implements LineMarkerProvider {
     public LineMarkerInfo<PsiElement> getLineMarkerInfo(@NotNull PsiElement element) {
         if (element instanceof LeafPsiElement
                 && element.getText().startsWith("ENC(")
-                && element.getParent() instanceof PsiLanguageInjectionHost) {
+                && element.getParent() instanceof PsiLanguageInjectionHost
+        ) {
             Icon cryptedIcon = AllIcons.Nodes.Private;
             if (checkStoredPassword(element)) {
                 cryptedIcon = AllIcons.Nodes.Public;
@@ -39,7 +40,7 @@ public class DecryptLineMarkerProvider implements LineMarkerProvider {
     }
 
     private boolean checkStoredPassword(PsiElement element) {
-        if (element.getParent() instanceof PsiLanguageInjectionHost property) {
+        if (element instanceof LeafPsiElement property) {
             return CipherDecryptCommand.of(property).check();
         }
 
@@ -50,7 +51,7 @@ public class DecryptLineMarkerProvider implements LineMarkerProvider {
 
         @Override
         public void navigate(MouseEvent e, PsiElement elt) {
-            if (elt.getParent() instanceof PsiLanguageInjectionHost property) {
+            if (elt instanceof LeafPsiElement property) {
                 CipherDecryptCommand.of(property).execute();
             }
         }

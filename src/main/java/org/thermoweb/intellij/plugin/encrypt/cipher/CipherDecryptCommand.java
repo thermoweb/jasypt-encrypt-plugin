@@ -15,27 +15,24 @@ import org.thermoweb.intellij.plugin.encrypt.vault.CipherConfiguration;
 import org.thermoweb.intellij.plugin.encrypt.vault.SecretVault;
 
 import com.intellij.openapi.command.WriteCommandAction;
-import com.intellij.psi.PsiLanguageInjectionHost;
+import com.intellij.psi.impl.source.tree.LeafPsiElement;
 
 import static org.thermoweb.intellij.plugin.encrypt.CipherInformationsDialog.*;
 
 public class CipherDecryptCommand {
     private final Pattern pattern = Pattern.compile("ENC\\((.*)\\)");
-    private final PsiLanguageInjectionHost property;
+    private final LeafPsiElement property;
 
-    private CipherDecryptCommand(PsiLanguageInjectionHost property) {
+    private CipherDecryptCommand(LeafPsiElement property) {
         this.property = Objects.requireNonNull(property);
     }
 
-    public static CipherDecryptCommand of(PsiLanguageInjectionHost property) {
+    public static CipherDecryptCommand of(LeafPsiElement property) {
         return new CipherDecryptCommand(property);
     }
 
     public boolean check() {
-        boolean isTextEncapsulated = Optional.ofNullable(property.getText())
-                .map(String::trim)
-                .map(s -> s.startsWith("ENC("))
-                .orElse(false);
+        boolean isTextEncapsulated = property.getText().trim().startsWith("ENC(");
         Optional<CipherConfiguration> storedConfiguration = SecretVault.getSecrets(property.getContainingFile().getVirtualFile().getPath());
         if (storedConfiguration.isEmpty()) {
             return false;
@@ -52,13 +49,10 @@ public class CipherDecryptCommand {
     }
 
     public void execute() {
-        boolean isTextEncapsulated = Optional.ofNullable(property.getText())
-                .map(String::trim)
-                .map(s -> s.startsWith("ENC("))
-                .orElse(false);
+
+        boolean isTextEncapsulated = property.getText().trim().startsWith("ENC(");
         Optional<CipherConfiguration> storedConfiguration = SecretVault.getSecrets(property.getContainingFile().getVirtualFile().getPath());
         storedConfiguration.ifPresentOrElse(configuration -> {
-
                     String textToUncrypt = getTextToUncrypt(property.getText(), isTextEncapsulated);
                     try {
                         String clearText = CipherUtils.decrypt(textToUncrypt, configuration.password(), configuration.algorithm().getCode());
@@ -104,7 +98,7 @@ public class CipherDecryptCommand {
 
     private void setClearText(String clearText) {
         WriteCommandAction.runWriteCommandAction(property.getProject(), () -> {
-            property.updateText(clearText);
+            property.replaceWithText(clearText);
         });
     }
 }
