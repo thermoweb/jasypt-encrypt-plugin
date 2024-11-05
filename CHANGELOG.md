@@ -4,6 +4,10 @@
 
 ## Unreleased
 
+### Fixed
+
+- some specials chars in password are lost when deciphering text (#20)
+
 ## 1.2.1 - 2024-10-09
 
 ### Fixed
