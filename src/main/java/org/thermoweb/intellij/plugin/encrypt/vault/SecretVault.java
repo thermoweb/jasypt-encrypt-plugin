@@ -2,6 +2,8 @@ package org.thermoweb.intellij.plugin.encrypt.vault;
 
 import java.util.Optional;
 
+import org.thermoweb.intellij.plugin.encrypt.exceptions.JasyptPluginException;
+
 import com.intellij.credentialStore.CredentialAttributes;
 import com.intellij.credentialStore.CredentialAttributesKt;
 import com.intellij.credentialStore.Credentials;
@@ -12,12 +14,17 @@ public class SecretVault {
     private SecretVault() {
     }
 
-    public static Optional<String> getSecret(String key) {
-        return getCredentials(key).map(Credentials::getPasswordAsString);
-    }
-
     public static Optional<CipherConfiguration> getSecrets(String key) {
-        return getCredentials(key).map(CipherConfiguration::new);
+        return getCredentials(key).flatMap(credentials -> {
+            try {
+                return Optional.of(CipherConfiguration.deserialize(credentials.getPasswordAsString()));
+            } catch (Exception e) {
+                if (credentials.getUserName() != null && credentials.getPassword() != null) {
+                    return Optional.of(new CipherConfiguration(credentials));
+                }
+                return Optional.empty();
+            }
+        });
     }
 
     private static Optional<Credentials> getCredentials(String key) {
@@ -26,16 +33,15 @@ public class SecretVault {
         return Optional.ofNullable(passwordSafe.get(attributes));
     }
 
-    public static void storeSecret(String key, String secret) {
-        CredentialAttributes attributes = createCredentialAttributes(key);
-        Credentials credentials = new Credentials("jasypt-plugin", secret);
-        PasswordSafe.getInstance().set(attributes, credentials);
-    }
-
     public static void storeSecret(String key, CipherConfiguration configuration) {
         CredentialAttributes attributes = createCredentialAttributes(key);
-        Credentials credentials = new Credentials(configuration.algorithm().getCode(), configuration.password());
-        PasswordSafe.getInstance().set(attributes, credentials);
+		try {
+			String serializedConfig = CipherConfiguration.serialize(configuration);
+            Credentials credentials = new Credentials(null, serializedConfig);
+            PasswordSafe.getInstance().set(attributes, credentials);
+        } catch (JasyptPluginException e) {
+            // do nothing
+        }
     }
 
     private static CredentialAttributes createCredentialAttributes(String key) {
