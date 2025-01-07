@@ -11,8 +11,7 @@ import org.thermoweb.intellij.plugin.encrypt.exceptions.JasyptPluginException;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.command.WriteCommandAction;
 
-import static org.thermoweb.intellij.plugin.encrypt.CipherInformationsDialog.ALGORITHM_FIELD_NAME;
-import static org.thermoweb.intellij.plugin.encrypt.CipherInformationsDialog.PASSWORD_FIELD_NAME;
+import static org.thermoweb.intellij.plugin.encrypt.CipherInformationsDialog.*;
 
 public class UncryptStringAction extends JasyptAction {
 
@@ -23,7 +22,10 @@ public class UncryptStringAction extends JasyptAction {
                 .ifPresentOrElse(cipherConfiguration -> {
                             try {
                                 Optional<String> selectedText = getSelectedText();
-                                String clearText = CipherUtils.decrypt(selectedText.orElseThrow(), cipherConfiguration.password(), cipherConfiguration.algorithm().getCode());
+                                String clearText = CipherUtils.decrypt(selectedText.orElseThrow(),
+                                        cipherConfiguration.password(),
+                                        cipherConfiguration.algorithm().getCode(),
+                                        cipherConfiguration.ivGenerator().getCode());
                                 setClearText(clearText);
                             } catch (JasyptPluginException e) {
                                 askAndDecrypt();
@@ -48,7 +50,7 @@ public class UncryptStringAction extends JasyptAction {
             WriteCommandAction.runWriteCommandAction(project,
                     () -> {
                         try {
-                            String decrypt = CipherUtils.decrypt(text, values.get(PASSWORD_FIELD_NAME), values.get(ALGORITHM_FIELD_NAME));
+                            String decrypt = CipherUtils.decrypt(text, values.get(PASSWORD_FIELD_NAME), values.get(ALGORITHM_FIELD_NAME), values.get(IVGENERATOR_FIELD_NAME));
                             setClearText(decrypt);
                         } catch (JasyptPluginException e) {
                             Notifier.notifyError(project, "Failed to decrypt string, please verify provided password or algorithm.");

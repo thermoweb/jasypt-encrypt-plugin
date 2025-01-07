@@ -15,6 +15,7 @@ import com.intellij.util.xmlb.XmlSerializerUtil;
 public class JasyptPluginSettings implements PersistentStateComponent<JasyptPluginSettings> {
 
     private String algorithm;
+    private String ivGenerator;
     private boolean isEncapsulated;
     private boolean rememberPassword;
 
@@ -41,6 +42,7 @@ public class JasyptPluginSettings implements PersistentStateComponent<JasyptPlug
 
     public enum ConfigurationField {
         ALGORITHM(CipherInformationsDialog.ALGORITHM_FIELD_NAME, JasyptPluginSettings::setAlgorithm),
+        IV_GENERATOR(CipherInformationsDialog.IVGENERATOR_FIELD_NAME, JasyptPluginSettings::setIvGenerator),
         ENCAPSULATE(CipherInformationsDialog.ENCAPSULATE_FIELD_NAME, JasyptPluginSettings::setIsEncapsulated),
         REMEMBER_PASSWORD(CipherInformationsDialog.REMEMBER_PASSWORD, JasyptPluginSettings::setRememberPassword);
 
@@ -61,6 +63,13 @@ public class JasyptPluginSettings implements PersistentStateComponent<JasyptPlug
         return algorithm;
     }
 
+    public String getIvGenerator() {
+        return ivGenerator;
+    }
+
+    public void setIvGenerator(String ivGenerator) {
+        this.ivGenerator = ivGenerator;
+    }
 
     public void setIsEncapsulated(boolean isEncapsulated) {
         this.isEncapsulated = isEncapsulated;

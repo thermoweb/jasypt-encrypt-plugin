@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.jetbrains.annotations.NotNull;
 import org.thermoweb.intellij.plugin.encrypt.Algorithms;
+import org.thermoweb.intellij.plugin.encrypt.IvGenerators;
 import org.thermoweb.intellij.plugin.encrypt.cipher.CipherUtils;
 import org.thermoweb.intellij.plugin.encrypt.vault.CipherConfiguration;
 import org.thermoweb.intellij.plugin.encrypt.vault.SecretVault;
@@ -34,13 +35,15 @@ public class EncryptStringAction extends JasyptAction {
 
         String password = values.get(PASSWORD_FIELD_NAME);
         String algorithm = values.get(ALGORITHM_FIELD_NAME);
-        String newValue = CipherUtils.encrypt(primaryCaret.getSelectedText(), password, algorithm);
+        String ivGenerator = values.get(IVGENERATOR_FIELD_NAME);
+        String newValue = CipherUtils.encrypt(primaryCaret.getSelectedText(), password, algorithm, ivGenerator);
         final String cipheredString = "true".equals(values.get(ENCAPSULATE_FIELD_NAME)) ? "ENC(" + newValue + ")" : newValue;
         WriteCommandAction.runWriteCommandAction(project,
                 () -> document.replaceString(primaryCaret.getSelectionStart(), primaryCaret.getSelectionEnd(), cipheredString));
         updateSettings();
         if ("true".equals(values.get(REMEMBER_PASSWORD))) {
-            filePath.ifPresent(path -> SecretVault.storeSecret(path, new CipherConfiguration(Algorithms.fromCode(algorithm), password)));
+            filePath.ifPresent(path -> SecretVault.storeSecret(path,
+                    new CipherConfiguration(Algorithms.fromCode(algorithm), IvGenerators.fromCode(ivGenerator), password)));
         }
         primaryCaret.removeSelection();
     }

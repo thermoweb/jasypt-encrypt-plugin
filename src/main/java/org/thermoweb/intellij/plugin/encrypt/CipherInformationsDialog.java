@@ -22,11 +22,13 @@ import com.intellij.util.ui.JBInsets;
 
 public class CipherInformationsDialog extends DialogWrapper {
     public static final String ALGORITHM_FIELD_NAME = "algorithm";
+    public static final String IVGENERATOR_FIELD_NAME = "ivGenerator";
     public static final String PASSWORD_FIELD_NAME = "password";
     public static final String ENCAPSULATE_FIELD_NAME = "encapsulate";
     public static final String REMEMBER_PASSWORD = "rememberPassword";
 
     private final EditorComboBox comboBox = new EditorComboBox(ALGORITHM_FIELD_NAME);
+    private final EditorComboBox comboIvGeneratorBox = new EditorComboBox(IVGENERATOR_FIELD_NAME);
     private final PasswordFieldPanel passwordTextField = new PasswordFieldPanel();
     private final JCheckBox encapsulateCheckBox = new JCheckBox(ENCAPSULATE_FIELD_NAME, true);
     private final JCheckBox rememberPasswordCheckBox = new JCheckBox(REMEMBER_PASSWORD, true);
@@ -45,6 +47,7 @@ public class CipherInformationsDialog extends DialogWrapper {
         encapsulateCheckBox.setText("surrounded by ENC(...)");
         encapsulateCheckBox.setName(ENCAPSULATE_FIELD_NAME);
         comboBox.setName(ALGORITHM_FIELD_NAME);
+        comboIvGeneratorBox.setName(IVGENERATOR_FIELD_NAME);
         rememberPasswordCheckBox.setName(REMEMBER_PASSWORD);
         setTitle("Password");
         init();
@@ -65,6 +68,15 @@ public class CipherInformationsDialog extends DialogWrapper {
                 .ifPresent(comboBox::setSelectedItem);
         dialogCreator.add(comboBox);
 
+        dialogCreator.add(new JLabel(IVGENERATOR_FIELD_NAME));
+        comboIvGeneratorBox.removeAllItems();
+        comboIvGeneratorBox.setEnabled(IvGenerators.values().length > 1);
+        Arrays.stream(IvGenerators.values()).forEach(a -> comboIvGeneratorBox.appendItem(a.getCode()));
+        Optional.ofNullable(settings)
+                .map(JasyptPluginSettings::getIvGenerator)
+                .ifPresent(comboIvGeneratorBox::setSelectedItem);
+        dialogCreator.add(comboIvGeneratorBox);
+
         Boolean encapsulatedSetting = Optional.ofNullable(settings)
                 .map(JasyptPluginSettings::isEncapsulated)
                 .orElse(true);
@@ -84,6 +96,7 @@ public class CipherInformationsDialog extends DialogWrapper {
     public Map<String, String> getValues() {
         Map<String, String> values = new HashMap<>();
         values.put(comboBox.getName(), comboBox.getText());
+        values.put(comboIvGeneratorBox.getName(), comboIvGeneratorBox.getText());
         values.put(passwordTextField.getName(), passwordTextField.getText());
         values.put(encapsulateCheckBox.getName(), String.valueOf(encapsulateCheckBox.isSelected()));
         values.put(rememberPasswordCheckBox.getName(), String.valueOf(rememberPasswordCheckBox.isSelected()));
@@ -96,6 +109,10 @@ public class CipherInformationsDialog extends DialogWrapper {
 
     public void setAlgorithm(String algorithm) {
         comboBox.setSelectedItem(algorithm);
+    }
+
+    public void setIvGenerator(String ivGenerator) {
+        comboIvGeneratorBox.setSelectedItem(ivGenerator);
     }
 
     static class DialogCreator {

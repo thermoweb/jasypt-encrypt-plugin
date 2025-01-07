@@ -6,10 +6,7 @@ import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.thermoweb.intellij.plugin.encrypt.Algorithms;
-import org.thermoweb.intellij.plugin.encrypt.CipherInformationsDialog;
-import org.thermoweb.intellij.plugin.encrypt.JasyptPluginSettings;
-import org.thermoweb.intellij.plugin.encrypt.Notifier;
+import org.thermoweb.intellij.plugin.encrypt.*;
 import org.thermoweb.intellij.plugin.encrypt.exceptions.JasyptPluginException;
 import org.thermoweb.intellij.plugin.encrypt.vault.CipherConfiguration;
 import org.thermoweb.intellij.plugin.encrypt.vault.SecretVault;
@@ -41,7 +38,7 @@ public class CipherDecryptCommand {
         CipherConfiguration configuration = storedConfiguration.get();
         String textToUncrypt = getTextToUncrypt(property.getText(), isTextEncapsulated);
         try {
-            CipherUtils.decrypt(textToUncrypt, configuration.password(), configuration.algorithm().getCode());
+            CipherUtils.decrypt(textToUncrypt, configuration.password(), configuration.algorithm().getCode(), configuration.ivGenerator().getCode());
             return true;
         } catch (JasyptPluginException e) {
             return false;
@@ -55,7 +52,7 @@ public class CipherDecryptCommand {
         storedConfiguration.ifPresentOrElse(configuration -> {
                     String textToUncrypt = getTextToUncrypt(property.getText(), isTextEncapsulated);
                     try {
-                        String clearText = CipherUtils.decrypt(textToUncrypt, configuration.password(), configuration.algorithm().getCode());
+                        String clearText = CipherUtils.decrypt(textToUncrypt, configuration.password(), configuration.algorithm().getCode(), configuration.ivGenerator().getCode());
                         setClearText(clearText);
                     } catch (JasyptPluginException e) {
                         askAndDecrypt(isTextEncapsulated);
@@ -73,10 +70,12 @@ public class CipherDecryptCommand {
         String textToUncrypt = getTextToUncrypt(property.getText(), values.get(ENCAPSULATE_FIELD_NAME));
         String password = values.get(PASSWORD_FIELD_NAME);
         String algorithm = values.get(ALGORITHM_FIELD_NAME);
+        String ivGenerators = values.get(IVGENERATOR_FIELD_NAME);
         try {
-            String clearText = CipherUtils.decrypt(textToUncrypt, password, algorithm);
+            String clearText = CipherUtils.decrypt(textToUncrypt, password, algorithm, ivGenerators);
             if ("true".equals(values.get(REMEMBER_PASSWORD))) {
-                SecretVault.storeSecret(property.getContainingFile().getVirtualFile().getPath(), new CipherConfiguration(Algorithms.fromCode(algorithm), password));
+                SecretVault.storeSecret(property.getContainingFile().getVirtualFile().getPath(),
+                        new CipherConfiguration(Algorithms.fromCode(algorithm), IvGenerators.fromCode(ivGenerators), password));
             }
             JasyptPluginSettings.updateSettings(property.getProject(), dialog.getValues());
             setClearText(clearText);
