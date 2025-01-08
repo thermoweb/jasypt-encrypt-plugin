@@ -2,6 +2,8 @@ package org.thermoweb.intellij.plugin.encrypt;
 
 import java.awt.event.MouseEvent;
 
+import javax.swing.Icon;
+
 import org.jetbrains.annotations.NotNull;
 import org.thermoweb.intellij.plugin.encrypt.cipher.CipherDecryptCommand;
 
@@ -13,8 +15,6 @@ import com.intellij.openapi.editor.markup.GutterIconRenderer;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiLanguageInjectionHost;
 import com.intellij.psi.impl.source.tree.LeafPsiElement;
-
-import javax.swing.Icon;
 
 public class DecryptLineMarkerProvider implements LineMarkerProvider {
 

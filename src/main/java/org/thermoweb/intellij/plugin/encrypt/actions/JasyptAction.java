@@ -23,8 +23,6 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
 
-import static org.thermoweb.intellij.plugin.encrypt.CipherInformationsDialog.ENCAPSULATE_FIELD_NAME;
-
 public class JasyptAction extends AnAction {
     private final Pattern pattern = Pattern.compile("ENC\\((.*)\\)");
 
@@ -84,7 +82,7 @@ public class JasyptAction extends AnAction {
 
     private String matchSelected(String text) {
         Matcher matches = pattern.matcher(text);
-        return matches.find() && "true".equals(Optional.ofNullable(dialog).map(d -> d.getValues().get(ENCAPSULATE_FIELD_NAME)).orElse("false")) ?
+        return matches.find() && Optional.ofNullable(dialog).map(CipherInformationsDialog::isEncapsulated).orElse(false) ?
                 matches.group(1) :
                 text;
     }

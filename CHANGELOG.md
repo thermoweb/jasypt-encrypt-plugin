@@ -4,6 +4,10 @@
 
 ## Unreleased
 
+### Added
+
+- can now specify and configure IvGenerator for encryption (only two options for now)
+
 ## 1.2.2-beta.2 - 2024-11-05
 
 ### Fixed
