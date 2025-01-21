@@ -4,6 +4,8 @@
 
 ## Unreleased
 
+## 1.3.0 - 2025-01-21
+
 ### Added
 
 - can now specify and configure IvGenerator for encryption (only two options for now)
